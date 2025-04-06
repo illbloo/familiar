@@ -59,6 +59,29 @@ run@agent() {
     exec "$cmd" "$run_agent_script"  "$argc_agent" "$argc_action" "$argc_json"
 }
 
+# @cmd Add a tool to tools.txt
+# @alias tool:add
+# @arg tool The tool name
+add@tool() {
+    if [[ -z "$1" ]]; then
+        _die "error: no tool name provided"
+    fi
+    if [[ -f "tools/$1" ]]; then
+        _die "error: tool $1 already exists"
+    fi
+    echo -e "\n$1" >> tools.txt
+}
+
+# @cmd Remove a tool from tools.txt
+# @alias tool:remove
+# @arg tool The tool name
+remove@tool() {
+    if [[ -z "$1" ]]; then
+        _die "error: no tool name provided"
+    fi
+    sed -i '' "/$1/d" tools.txt
+}
+
 # @cmd Build the project
 build() {
     if [[ -f tools.txt ]]; then
@@ -195,6 +218,29 @@ generate-declarations@tool() {
     lang="${1##*.}"
     cmd="$(_lang_to_cmd "$lang")"
     "$cmd" "scripts/build-declarations.$lang" "tools/$1"
+}
+
+# @cmd Add an agent to agents.txt
+# @alias agent:add
+# @arg agent The agent name
+add@agent() {
+    if [[ -z "$1" ]]; then
+        _die "error: no agent name provided"
+    fi
+    if [[ -f "agents/$1" ]]; then
+        _die "error: agent $1 already exists"
+    fi
+    echo -e "\n$1" >> agents.txt
+}
+
+# @cmd Remove an agent from agents.txt
+# @alias agent:remove
+# @arg agent The agent name
+remove@agent() {
+    if [[ -z "$1" ]]; then
+        _die "error: no agent name provided"
+    fi
+    sed -i '' "/$1/d" agents.txt
 }
 
 # @cmd Build agents
