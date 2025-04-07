@@ -89,13 +89,13 @@ build() {
     else
         echo 'Skipped building tools since tools.txt is missing'
     fi
+    if [[ -f mcp.json ]]; then
+        argc mcp merge-functions -S
+    fi
     if [[ -f agents.txt ]]; then
         argc build@agent
     else
         echo 'Skipped building agents since agents.txt is missing'
-    fi
-    if [[ -f mcp.json ]]; then
-        argc mcp merge-functions -S
     fi
 }
 
@@ -376,6 +376,7 @@ build-declarations@agent() {
                 if [[ -n "$json_data" ]]; then
                     echo "Build $declarations_file"
                     echo "$json_data" > "$declarations_file"
+                    argc mcp build-agent --agent "$name" -S
                 fi
             fi
         fi

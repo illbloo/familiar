@@ -74,6 +74,31 @@ run@tool() {
     bash "$ROOT_DIR/scripts/run-mcp-tool.sh" "$argc_tool" "$argc_json"
 }
 
+# @cmd Add a new mcp tool
+# @arg tool! The tool name
+# @arg json! The json data
+add@tool() {
+    node "$ROOT_DIR/scripts/mcp.js" add "$argc_tool" "$argc_json"
+}
+
+# @cmd Remove a mcp tool
+# @arg tool! The tool name
+remove@tool() {
+    node "$ROOT_DIR/scripts/mcp.js" remove "$argc_tool"
+}
+
+# @cmd Enable a mcp tool
+# @arg tool! The tool name
+enable@tool() {
+    node "$ROOT_DIR/scripts/mcp.js" enable "$argc_tool"
+}
+
+# @cmd Disable a mcp tool
+# @arg tool! The tool name
+disable@tool() {
+    node "$ROOT_DIR/scripts/mcp.js" disable "$argc_tool"
+}
+
 # @cmd Show the logs
 # @flag -f --follow Follow mode
 logs() {
@@ -101,6 +126,18 @@ build-bin() {
         fi
         echo "Build bin/$tool"
     done
+}
+
+# @cmd Merge mcp tools into an agent's functions.json
+# @option --agent! Agent name
+# @flag -S --save Save to functions.json
+build-agent() {
+    result="$(jq --argjson json1 "$(argc mcp generate-declarations)" --argjson json2 "$(cat agents/$argc_agent/functions.json)" -n '($json1 + $json2)')"
+    if [[ -n "$argc_save" ]]; then
+        printf "%s" "$result" > "agents/$argc_agent/functions.json"
+    else
+        printf "%s" "$result"
+    fi
 }
 
 # @cmd Merge mcp tools into functions.json
