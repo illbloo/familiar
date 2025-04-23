@@ -111,6 +111,7 @@ function parseJsDoc(jsdoc, funcName) {
     try {
       params.push(parseParam(rawParam));
     } catch (err) {
+      console.error(err);
       throw new Error(
         `Unable to parse function '${funcName}' of jsdoc '@property ${rawParam}'`,
       );
@@ -130,7 +131,7 @@ function parseJsDoc(jsdoc, funcName) {
  * @param {string} rawParam
  */
 function parseParam(rawParam) {
-  const regex = /^{([^}]+)} +(\S+)( *- +| +)?/;
+  const regex = /^{([^{}]*(?:{[^{}]*}[^{}]*)*)} +(\S+)( *- +| +)?/;
   const match = regex.exec(rawParam);
   if (!match) {
     throw new Error(`Invalid jsdoc comment`);
@@ -169,6 +170,33 @@ function buildProperty(type, description) {
   } else if (type === "string[]") {
     property.type = "array";
     property.items = { type: "string" };
+  } else if (type.endsWith("[]")) {
+    // TODO: consider adding a proper JSDoc parser
+    // Handle array types with object elements
+    property.type = "array";
+    const itemType = type.slice(0, -2); // Remove the [] suffix
+    
+    if (itemType.startsWith("{") && itemType.endsWith("}")) {
+      // Handle object array items
+      property.items = { type: "object" };
+      
+      // Extract properties from the object type
+      const objectContent = itemType.slice(1, -1);
+      const properties = {};
+      
+      // Simple parsing of object properties
+      const propertyMatches = objectContent.match(/(\w+):\s*(\w+)/g);
+      if (propertyMatches) {
+        for (const match of propertyMatches) {
+          const [_, propName, propType] = match.match(/(\w+):\s*(\w+)/);
+          properties[propName] = { type: propType.toLowerCase() };
+        }
+        property.items.properties = properties;
+      }
+    } else {
+      // Handle simple array items
+      property.items = { type: itemType.toLowerCase() };
+    }
   } else {
     throw new Error(`Unsupported type '${type}'`);
   }

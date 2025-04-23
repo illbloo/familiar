@@ -1,10 +1,11 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 
-import * as path from "node:path";
-import * as fs from "node:fs";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
-import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
+import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js";
+import { StdioClientTransport, type StdioServerParameters } from "@modelcontextprotocol/sdk/client/stdio.js";
 import express from "express";
+import type { Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
 
 const app = express();
 const PORT = process.env.MCP_BRIDGE_PORT || 8808;
@@ -17,25 +18,36 @@ if (!rootDir) {
 }
 
 let mcpServers = {};
-const mcpJsonPath = path.join(rootDir, "mcp.json");
+const mcpJsonPath = Bun.fileURLToPath(`file://${rootDir}/mcp.json`);
 try {
-  const data = await fs.promises.readFile(mcpJsonPath, "utf8");
-  mcpServers = JSON.parse(data)?.mcpServers;
+  const data = await Bun.file(mcpJsonPath).json();
+  mcpServers = data?.mcpServers;
 } catch {
   console.error(`Failed to read json at '${mcpJsonPath}'`);
   process.exit(1);
 }
 
-async function startMcpServer(id, serverConfig) {
+interface ServerConfig extends StdioServerParameters {
+  prefix?: boolean;
+  /** URL for Streamable HTTP servers */
+  url: string;
+}
+
+async function startMcpServer(id: string, serverConfig: ServerConfig) {
   console.log(`Starting ${id} server...`);
   const capabilities = { tools: {} };
   const { prefix = true, ...rest } = serverConfig;
-  const transport = new StdioClientTransport({
-    ...rest,
-  });
+
+  let transport: Transport;
+  if (rest.url) {
+    transport = new StreamableHTTPClientTransport(new URL(rest.url));
+  } else {
+    transport = new StdioClientTransport({ ...rest });
+  }
+  console.log("Using transport:", transport);
   const client = new Client(
     { name: id, version: "1.0.0" },
-    { capabilities }
+    { capabilities },
   );
   await client.connect(transport);
   const { tools: toolDefinitions } = await client.listTools()
@@ -86,6 +98,7 @@ async function startMcpServer(id, serverConfig) {
 }
 
 async function runBridge() {
+  console.log("Starting MCP Bridge...");
   let hasError = false;
   let runningMcpServers = await Promise.all(
     Object.entries(mcpServers).map(
