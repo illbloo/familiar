@@ -11,7 +11,7 @@ set -e
 ROOT_DIR="${LLM_ROOT_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 
 main() {
-    echo "$argc_prompt" | aichat --model "${argc_model:-gemini:gemini-2.5-pro-exp-03-25}" >> "$LLM_OUTPUT"
+    aichat --model "${argc_model:-gemini:gemini-2.5-pro-exp-03-25}" "$argc_prompt" >> "$LLM_OUTPUT"
 }
 
 eval "$(argc --argc-eval "$0" "$@")"
