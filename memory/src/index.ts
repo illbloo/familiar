@@ -1,9 +1,13 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono';
 import mcp from './mcp/server';
+import chats from './routes/chats';
 
-const app = new Hono();
-const routes = app.route("/mcp", mcp);
+const app = new Hono()
+const routes = app
+  .route("/mcp", mcp)
+  .route("/chats", chats)
+;
 
 async function main() {
   console.log("Starting server on port 3000");

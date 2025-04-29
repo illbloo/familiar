@@ -15,6 +15,16 @@ async function main() {
     process.exit(1);
   }
 
+  const messages = data.compressed_messages?.map(({ role, content }) => ({
+    role,
+    content: typeof content === "string" ? content : JSON.stringify(content),
+  })) ?? [];
+
+  if (!messages.length) {
+    console.error("No messages found");
+    process.exit(1);
+  }
+
   if (dry_run) {
     console.log("Session parsed");
     console.log(data);
@@ -42,13 +52,7 @@ async function main() {
 
   const result = await client.callTool({
     name: "chat_add_messages",
-    arguments: {
-      chatId,
-      messages: data.session.messages.map(({ role, content }) => ({
-        role,
-        content: typeof content === "string" ? content : JSON.stringify(content),
-      })),
-    } satisfies ChatAddMessagesParams,
+    arguments: { chatId, messages } satisfies ChatAddMessagesParams,
   });
 
   if (result.isError) {

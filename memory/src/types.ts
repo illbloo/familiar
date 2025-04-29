@@ -8,7 +8,7 @@ export const messageSchema = z.object({
         name: z.string().describe("Tool name"),
         arguments: z.record(z.any()).describe("Tool arguments"),
       }),
-      output: z.array(z.record(z.any())).or(z.record(z.any())).describe("Tool output"),
+      output: z.string().or(z.array(z.record(z.any())).or(z.record(z.any()))).describe("Tool output"),
     })),
     text: z.string().describe("Message from assistant"),
     sequence: z.boolean().describe("Whether the message is a sequence"),

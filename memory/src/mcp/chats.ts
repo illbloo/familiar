@@ -13,7 +13,7 @@ export interface ChatAddMessagesParams {
   }[];
 }
 
-const chatAddMessagesSchema: z.ZodType<ChatAddMessagesParams> = z.object({
+const chatAddMessagesSchema = z.object({
   chatId: chatSelectSchema.shape.id,
   messages: z.array(z.object({
     content: z.string(),
