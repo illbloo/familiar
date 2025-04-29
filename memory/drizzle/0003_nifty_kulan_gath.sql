@@ -1,0 +1,1 @@
+ALTER TABLE "message_embeddings" ALTER COLUMN "id" SET DEFAULT gen_random_uuid();

@@ -1,0 +1,41 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1744339324000,
+      "tag": "0000_elite_the_anarchist",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1744343514170,
+      "tag": "0001_fearless_lilith",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1744346968796,
+      "tag": "0002_salty_ikaris",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1744358962854,
+      "tag": "0003_nifty_kulan_gath",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1745488041533,
+      "tag": "0004_secret_bromley",
+      "breakpoints": true
+    }
+  ]
+}
