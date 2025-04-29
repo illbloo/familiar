@@ -8,12 +8,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "migrate-session": "bun scripts/session-migrator/index.ts"
+    "migrate-session": "bun scripts/session-migrator/index.ts",
+    "sampler": "bun sampler/src/cli.ts"
   },
   "workspaces": [
     "memory",
     "mcp/server",
     "mcp/bridge",
-    "scripts/session-migrator/*"
+    "scripts/session-migrator/*",
+    "sampler"
   ]
 }
