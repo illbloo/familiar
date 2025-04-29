@@ -5,6 +5,7 @@ functions.json
 /bin
 /cache
 /agents/_*
+/old/
 /tools/_*
 /tools/web_search.*
 /tools/code_interpreter.*
@@ -16,3 +17,4 @@ node_modules
 package-lock.json
 *.lock
 /mcp.json
+.DS_Store
