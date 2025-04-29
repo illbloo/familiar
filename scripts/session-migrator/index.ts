@@ -6,11 +6,19 @@ import type { ChatAddMessagesParams } from "../../memory/src/mcp/chats";
 const MEMORY_SERVER_URL = process.env.MEMORY_SERVER_URL || "http://localhost:3000/mcp";
 
 async function main() {
+  const dry_run = process.argv.includes("--dry-run");
+
   console.log("Reading session from stdin");
   const { data, error } = await Bun.stdin.json().then(sessionSchema.safeParse);
   if (error) {
     console.error(error);
     process.exit(1);
+  }
+
+  if (dry_run) {
+    console.log("Session parsed");
+    console.log(data);
+    process.exit(0);
   }
 
   console.log("Connecting to MCP API");

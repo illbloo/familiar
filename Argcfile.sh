@@ -634,11 +634,19 @@ browse@session() {
             --preview-window=right:60%
 }
 
-# @cmd Export a chat session to JSON
+# @cmd Read a chat session as JSON
 # @alias session:export
 # @arg agent! Agent name
 # @arg session! Session name
-export@session() {
+read@session() {
+    cat "$ROOT_DIR/agents/$argc_agent/sessions/$argc_session.yaml" | yq -o=json
+}
+
+# @cmd Get info about a chat session
+# @alias session:info
+# @arg agent! Agent name
+# @arg session! Session name
+info@session() {
     aichat --agent "$argc_agent" --session "$argc_session" --info | yq -o=json
 }
 
