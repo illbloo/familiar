@@ -6,16 +6,18 @@
   },
   "description": "",
   "private": true,
-  "type": "module",
   "scripts": {
     "migrate-session": "bun scripts/session-migrator/index.ts",
     "sampler": "bun sampler/src/cli.ts"
   },
+  "type": "module",
   "workspaces": [
     "memory",
     "mcp/server",
     "mcp/bridge",
+    "midi",
     "scripts/session-migrator/*",
-    "sampler"
+    "sampler",
+    "oblivion"
   ]
 }

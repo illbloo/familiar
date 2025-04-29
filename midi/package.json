@@ -1,0 +1,11 @@
+{
+  "name": "familiar-midi",
+  "version": "0.0.1",
+  "type": "module",
+  "peerDependencies": {
+    "typescript": ">=5"
+  },
+  "devDependencies": {
+    "@types/webmidi": "^2.1.0"
+  }
+}
