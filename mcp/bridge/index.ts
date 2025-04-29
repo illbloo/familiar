@@ -60,7 +60,7 @@ async function startMcpServer(id: string, serverConfig: ServerConfig) {
         parameters: inputSchema,
         mcp: id,
       },
-      impl: async args => {
+      impl: async (args: any) => {
         const res = await client.callTool({
           name: name,
           arguments: args,

@@ -1,0 +1,19 @@
+{
+  "name": "llm-functions",
+  "version": "1.0.0",
+  "devDependencies": {
+    "@types/bun": "^1.2.11"
+  },
+  "description": "",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "migrate-session": "bun scripts/session-migrator/index.ts"
+  },
+  "workspaces": [
+    "memory",
+    "mcp/server",
+    "mcp/bridge",
+    "scripts/session-migrator/*"
+  ]
+}

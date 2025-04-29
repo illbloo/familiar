@@ -13,8 +13,5 @@ functions.json
 __pycache__
 /.venv
 node_modules
-/package.json
-package-lock.json
-*.lock
 /mcp.json
 .DS_Store
