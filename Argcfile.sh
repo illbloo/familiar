@@ -3,6 +3,7 @@ set -e
 
 # @meta dotenv
 
+ROOT_DIR="$(cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd)"
 BIN_DIR=bin
 TMP_DIR="cache/__tmp__"
 VENV_DIR=".venv"
@@ -624,7 +625,39 @@ mcp() {
     bash ./scripts/mcp.sh "$@"
 }
 
-# @cmd Create a boilplate tool script
+# @cmd Browse agent sessions
+# @alias session:browse
+# @arg agent! Agent to browse sessions for
+browse@session() {
+    aichat --agent "$argc_agent" --list-sessions | \
+        fzf --preview "aichat --agent $argc_agent --session {} --info | bat --style=numbers --language=yaml" \
+            --preview-window=right:60%
+}
+
+# @cmd Export a chat session to JSON
+# @alias session:export
+# @arg agent! Agent name
+# @arg session! Session name
+export@session() {
+    aichat --agent "$argc_agent" --session "$argc_session" --info | yq -o=json
+}
+
+# @cmd Import a chat session from JSON via stdin
+# @alias session:import
+# @arg agent! Agent name
+# @arg session! Session name
+import@session() {
+    yq -p=json -o=yaml > "agents/$argc_agent/sessions/$argc_session.yaml"
+}
+
+# @cmd Index agent sessions
+# @alias session:index
+index@session() {
+    node "$ROOT_DIR/functions/scripts/index-sessions.js"
+    cat "$ROOT_DIR/sessions.json"
+}
+
+# @cmd Create a boilerplate tool script
 # @alias tool:create
 # @arg args~
 create@tool() {
