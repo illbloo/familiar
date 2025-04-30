@@ -24,8 +24,6 @@ start() {
         llm_functions_dir="$(cygpath -w "$llm_functions_dir")"
     fi
     echo "Start MCP Bridge server..."
-    echo "Install node dependencies..." > "$MCP_LOG_FILE"
-    bun install --prefix "$ROOT_DIR/mcp/bridge" 1>/dev/null 2>> "$MCP_LOG_FILE"
     nohup bun run "$index_js" "$llm_functions_dir" >> "$MCP_LOG_FILE" 2>&1 &
     wait-for-server
     echo "Merge MCP tools into functions.json"

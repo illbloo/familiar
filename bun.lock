@@ -3,9 +3,6 @@
   "workspaces": {
     "": {
       "name": "llm-familiar",
-      "dependencies": {
-        "mcp-bridge": "/Users/me/Library/Application Support/aichat/functions/mcp/bridge",
-      },
       "devDependencies": {
         "@types/bun": "^1.2.11",
       },
@@ -458,8 +455,6 @@
     "math-intrinsics": ["math-intrinsics@1.1.0", "", {}, "sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g=="],
 
     "mcp-bridge": ["mcp-bridge@workspace:mcp/bridge"],
-
-    "mcp-bridge": ["mcp-bridge@file:mcp/bridge", { "dependencies": { "@modelcontextprotocol/sdk": "^1.10.2", "express": "^5.1.0" }, "devDependencies": { "@types/bun": "^1.2.10", "@types/express": "^5.0.1" }, "peerDependencies": { "typescript": "^5.8.3" }, "bin": { "mcp-bridge": "index.js" } }],
 
     "mcp-llm-functions": ["mcp-llm-functions@workspace:mcp/server"],
 

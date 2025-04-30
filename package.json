@@ -8,9 +8,10 @@
     "docker:start": "docker compose up -d",
     "mcp:start": "argc mcp start",
     "start": "bun run docker:start && bun run mcp:start",
+    "check": "argc check",
     "client": "bun client/src/index.ts",
     "migrate-session": "bun scripts/session-migrator/index.ts",
-    "notebook": "bun notebook/src/index.ts",
+    "notebook": "bun notebook/main.ts",
     "sampler": "bun sampler/src/cli.ts",
     "uithub": "bun tools/uithub/src/index.ts"
   },
@@ -27,8 +28,5 @@
   ],
   "devDependencies": {
     "@types/bun": "^1.2.11"
-  },
-  "dependencies": {
-    "mcp-bridge": "/Users/me/Library/Application Support/aichat/functions/mcp/bridge"
   }
 }
