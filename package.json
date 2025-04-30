@@ -1,5 +1,5 @@
 {
-  "name": "llm-functions",
+  "name": "llm-familiar",
   "version": "1.0.0",
   "devDependencies": {
     "@types/bun": "^1.2.11"
@@ -12,12 +12,12 @@
   },
   "type": "module",
   "workspaces": [
+    "client",
     "memory",
     "mcp/server",
     "mcp/bridge",
     "midi",
     "scripts/session-migrator/*",
-    "sampler",
-    "oblivion"
+    "sampler"
   ]
 }

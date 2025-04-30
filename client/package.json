@@ -1,0 +1,16 @@
+{
+  "name": "familiar-client",
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "cli": "bun run src/index.ts"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "commander": "^13.1.0",
+    "familiar-memory": "workspace:*",
+    "hono": "^4.7.8"
+  }
+}

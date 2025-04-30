@@ -3,11 +3,15 @@ import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 import mcp from './mcp/server';
 import chats from './routes/chats';
+import posts from './routes/posts';
 
-const app = new Hono()
+type HonoEnv = {};
+
+const app = new Hono<HonoEnv>()
 const routes = app
   .route("/mcp", mcp)
   .route("/chats", chats)
+  .route("/posts", posts)
 ;
 
 app.onError((err, c) => {
