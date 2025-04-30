@@ -3,13 +3,12 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { $ } from "bun";
-import { appendFile } from "fs/promises";
 
 // Configuration
 dotenv.config();
 
 const NOTEBOOK_NAME = process.env.NOTEBOOK_NAME || "familiar";
-const LOG_PATH = Bun.pathToFileURL("./notebook.log");
+//const LOG_PATH = Bun.pathToFileURL("./notebook.log");
 
 const log = async (text: string) => undefined; //appendFile(LOG_PATH, `${new Date().toISOString()} ${text}\n`);
 
@@ -21,12 +20,12 @@ async function main() {
 
   const mcp = new McpServer({
     name: "notebook",
-    version: "1.0.0",
+    version: "1.1.0",
   });
 
   mcp.tool(
-    "notebook_note_show",
-    "Read a note from your notebook",
+    "note_read",
+    "Read a note from the assistant's notebook.",
     {
       id: z.number().describe("The ID of the note to read"),
     },
@@ -48,8 +47,8 @@ async function main() {
   )
 
   mcp.tool(
-    "notebook_notes_list",
-    "List all notes in your notebook",
+    "note_list",
+    "List all notes in the assistant's notebook.",
     async () => {
       const cmd: string[] = ["nb", `${NOTEBOOK_NAME}:list`, "--no-color"];
       const ps = Bun.spawn({
@@ -94,8 +93,8 @@ async function main() {
   );
 
   mcp.tool(
-    "notebook_add_note",
-    "Add a new note to your notebook",
+    "note_create",
+    "Write a new note to the assistant's notebook.",
     {
       title: z.string().describe("The title for the new note"),
       content: z.string().describe("The content for the new note (markdown format)"),
@@ -120,8 +119,8 @@ async function main() {
   );
 
   mcp.tool(
-    "notebook_search",
-    "Perform a full-text search of your notes.",
+    "note_search",
+    "Perform a full-text search of the assistant's notebook.",
     {
       query: z.string()
         .describe("The query to search for"),
