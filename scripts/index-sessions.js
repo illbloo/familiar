@@ -1,7 +1,7 @@
 // @ts-check
 
-const fs = require('fs');
-const path = require('path');
+import fs from "fs";
+import path from "path";
 
 const AICHAT_DIR = path.dirname(path.dirname(__dirname));
 const SESSIONS_DIR = path.join(AICHAT_DIR, 'agents/familiar/sessions');

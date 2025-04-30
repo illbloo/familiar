@@ -1,8 +1,8 @@
 // @ts-check
 
-const path = require("path");
-const fs = require("fs");
-const { exec } = require("child_process");
+import path from "path";
+import fs from "fs";
+import { exec } from "child_process";
 
 /**
  * Create a new tool written in JavaScript.

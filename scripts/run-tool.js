@@ -2,9 +2,9 @@
 
 // Usage: ./run-tool.js <tool-name> <tool-data>
 
-const path = require("path");
-const { readFile, writeFile } = require("fs/promises");
-const os = require("os");
+import path from "path";
+import { readFile, writeFile } from "fs/promises";
+import os from "os";
 
 async function main() {
   const [toolName, rawData] = parseArgv("run-tool.js");

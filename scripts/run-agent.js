@@ -2,9 +2,9 @@
 
 // Usage: ./run-agent.js <agent-name> <agent-func> <agent-data>
 
-const path = require("path");
-const { readFile, writeFile } = require("fs/promises");
-const os = require("os");
+import path from "path";
+import { readFile, writeFile } from "fs/promises";
+import os from "os";
 
 async function main() {
   const [agentName, agentFunc, rawData] = parseArgv("run-agent.js");
