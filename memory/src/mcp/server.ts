@@ -1,18 +1,20 @@
 import { Hono } from "hono";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
+import { toFetchResponse, toReqRes } from "fetch-to-node";
 import { provider as memoryProvider } from "./memory";
 import { provider as chatsProvider } from "./chats";
-import { toFetchResponse, toReqRes } from "fetch-to-node";
+import { provider as postsProvider } from "./posts";
 
 function createMcpServer(): McpServer {
   const server = new McpServer({
     name: "familiar",
-    version: "1.0.0"
+    version: "1.1.0",
   });
 
   memoryProvider(server);
   chatsProvider(server);
+  postsProvider(server);
 
   return server;
 }

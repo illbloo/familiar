@@ -4,6 +4,16 @@ import { zValidator } from "@hono/zod-validator";
 import { postsSelectSchema, postsTable } from "../db/schema/posts";
 import { eq, SQL, and, lt, gt } from "drizzle-orm";
 import { z } from "zod";
+import { nomber } from "../util/zod";
+
+export const getPostsSchema = z.object({
+  before: z.date().max(new Date()).optional()
+    .describe("Retrieve posts before this date"),
+  after: z.date().optional()
+    .describe("Retrieve posts after this date"),
+  limit: nomber(z.number().min(1).max(20)).optional()
+    .describe("Maximum number of posts to retrieve"),
+});
 
 const app = new Hono()
   .post(
@@ -24,11 +34,7 @@ const app = new Hono()
   )
   .get(
     "/",
-    zValidator("query", z.object({
-      before: z.date().max(new Date()).optional(),
-      after: z.date().optional(),
-      limit: z.number().optional(),
-    })),
+    zValidator("query", getPostsSchema),
     async (c) => {
       const body = c.req.valid('query');
 
