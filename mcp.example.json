@@ -1,0 +1,30 @@
+{
+  "mcpServers": {
+    "familiar": {
+      "url": "http://127.0.0.1:3000/mcp"
+    },
+    "notebook": {
+      "command": "bun",
+      "args": ["/Users/me/code/dotfiles/.familiar/tools/notebook/notebook.js"]
+    }
+  },
+  "mcpServersDisabled": {
+    "familor": {
+      "command": "pnpx",
+      "args": ["supergateway", "--sse", "http://127.0.0.1:3000/sse"]
+    },
+    "uithub": {
+      "command": "bun",
+      "args": ["/Users/me/code/dotfiles/.familiar/tools/uithub/uithub.js"]
+    },
+    "ical": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/Users/me/Library/Application Support/aichat/functions/tools/calendar",
+        "run",
+        "mcp-ical"
+      ]
+    }
+  }
+}

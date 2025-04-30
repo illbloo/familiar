@@ -17,7 +17,9 @@
     "mcp/server",
     "mcp/bridge",
     "midi",
+    "notebook",
     "scripts/session-migrator/*",
-    "sampler"
+    "sampler",
+    "tools/uithub"
   ]
 }

@@ -1,0 +1,19 @@
+{
+  "name": "familiar-uithub",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "bun build --target bun --outfile uithub.js main.ts",
+    "dev": "bunx @modelcontextprotocol/inspector bun run main.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.10.2",
+    "dotenv": "^16.5.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}

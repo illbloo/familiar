@@ -84,6 +84,19 @@
         "typescript": ">=5",
       },
     },
+    "notebook": {
+      "name": "familiar-notebook",
+      "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.10.2",
+        "dotenv": "^16.5.0",
+      },
+      "devDependencies": {
+        "@types/bun": "latest",
+      },
+      "peerDependencies": {
+        "typescript": "^5",
+      },
+    },
     "sampler": {
       "name": "sampler",
       "version": "0.0.0",
@@ -98,6 +111,19 @@
       "devDependencies": {
         "@types/bun": "latest",
         "typescript": "^5.5.2",
+      },
+    },
+    "tools/uithub": {
+      "name": "familiar-uithub",
+      "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.10.2",
+        "dotenv": "^16.5.0",
+      },
+      "devDependencies": {
+        "@types/bun": "latest",
+      },
+      "peerDependencies": {
+        "typescript": "^5",
       },
     },
   },
@@ -363,6 +389,10 @@
     "familiar-memory": ["familiar-memory@workspace:memory"],
 
     "familiar-midi": ["familiar-midi@workspace:midi"],
+
+    "familiar-notebook": ["familiar-notebook@workspace:notebook"],
+
+    "familiar-uithub": ["familiar-uithub@workspace:tools/uithub"],
 
     "fdir": ["fdir@6.4.4", "", { "peerDependencies": { "picomatch": "^3 || ^4" }, "optionalPeers": ["picomatch"] }, "sha512-1NZP+GK4GfuAv3PqKvxQRDMjdSRZjnkq7KfhlNrCNNlZ0ygQFpebfrnfnq/W7fpUnAv9aGWmY1zKx7FYL3gwhg=="],
 

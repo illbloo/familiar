@@ -1,0 +1,10 @@
+{
+  "notebook": {
+    "command": "bun",
+    "args": ["$FAMILIAR_DIR/notebook/notebook.js"]
+  },
+  "uithub": {
+    "command": "bun",
+    "args": ["$FAMILIAR_DIR/tools/uithub/uithub.js"]
+  }
+}
