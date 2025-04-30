@@ -1,8 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 import { z } from "zod";
 import {
-  entityInsertSchema,
-  observationInsertSchema,
   entitiesTable,
   Entity,
   observationsTable,
@@ -14,18 +12,33 @@ import {
   relationSelectSchema,
 } from "../db/schema/memory";
 import db from "../db";
-import { inArray, ilike, eq } from "drizzle-orm";
+import { inArray, eq } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
+import { findSimilarObservations, insertObservation, listEntities } from "../memory/memory";
+import openai from "../ai/providers/openai";
+import { createEmbedding } from "../ai/providers/openai";
 
 export const provider = (mcp: McpServer) => {
+  mcp.tool(
+    "memory_list_entities",
+    "List entities in the knowledge graph, showing the number of associated observations and relations.",
+    async () => {
+      return {
+        content: [{
+          type: "text",
+          text: JSON.stringify(await listEntities()),
+        }],
+      };
+    },
+  );
+
   mcp.tool(
     "memory_create_entities",
     "Create entities in the knowledge graph",
     {
-      entities: z.array(entityInsertSchema.omit({
-        id: true,
-        updatedAt: true,
-        createdAt: true,
+      entities: z.array(z.object({
+        name: z.string().describe("The name of the entity"),
+        entityType: z.string().describe("The type of the entity"),
       })),
     },
     async ({ entities }) => {
@@ -48,9 +61,9 @@ export const provider = (mcp: McpServer) => {
     "Create relations in the knowledge graph",
     {
       relations: z.array(z.object({
-        from: z.string(),
-        to: z.string(),
-        relationType: z.string(),
+        fromEntityId: z.number().describe("ID of the entity the relation is from"),
+        toEntityId: z.number().describe("ID of the entity the relation is to"),
+        relationType: z.string().describe("Verb that describes the relation"),
       })),
     },
     async ({ relations }) => {
@@ -70,34 +83,56 @@ export const provider = (mcp: McpServer) => {
 
   mcp.tool(
     "memory_add_observations",
-    "Add observations to the knowledge graph",
+    "Add observations to an entity in the knowledge graph",
     {
-      observations: z.array(observationInsertSchema.pick({
-        id: true,
-        entityId: true,
-        content: true,
-      })),
+      observations: z.array(z.object({
+        content: z.string().describe("The content of the observation"),
+        entityId: z.number().describe("The ID of the entity the observation is about"),
+      })).describe("Observations to add to the knowledge graph. Each observation should be comprehensible on its own, and related to the entity."),
     },
     async ({ observations }) => {
-      const result: Observation[] = await db
-        .insert(observationsTable)
-        .values(observations)
-        .returning();
+      const ids = await Promise.all(observations.map(insertObservation));
 
       return {
         content: [{
           type: "text",
-          text: JSON.stringify(result),
+          text: JSON.stringify(ids),
         }],
       };
     },
   );
 
+  /*mcp.tool(
+    "memory_set_observation_entity_id",
+    "Set the entity ID of an observation whose entity ID is not set",
+    {
+      ids: z.array(z.object({
+        observationId: z.number().describe("ID of the observation to set the entity ID of"),
+        entityId: z.number().describe("ID of the entity to set the observation to"),
+      })),
+    },
+    async ({ ids }) => {
+      for (const id of ids) {
+        await db
+          .update(observationsTable)
+          .set({ entityId: id.entityId })
+          .where(eq(observationsTable.id, id.observationId));
+      }
+
+      return {
+        content: [{
+          type: "text",
+          text: "Observation entity ID set successfully"
+        }]
+      }
+    }
+  );*/
+
   mcp.tool(
     "memory_delete_entities",
     "Delete entities from your memories by id",
     {
-      entityIds: z.array(entitySelectSchema.shape.id),
+      entityIds: z.array(entitySelectSchema.shape.id.describe("ID of the entity to delete")),
     },
     async ({ entityIds }) => {
       await db
@@ -117,7 +152,7 @@ export const provider = (mcp: McpServer) => {
     "memory_delete_observations",
     "Delete observations from memory by their IDs",
     {
-      observationIds: z.array(observationSelectSchema.shape.id),
+      observationIds: z.array(observationSelectSchema.shape.id.describe("ID of the observation to delete")),
     },
     async ({ observationIds }) => {
       await db
@@ -136,7 +171,7 @@ export const provider = (mcp: McpServer) => {
   mcp.tool(
     "memory_delete_relations",
     "Delete relations from your memories by their IDs",
-    { relationIds: z.array(relationSelectSchema.shape.id) },
+    { relationIds: z.array(relationSelectSchema.shape.id.describe("ID of the relation to delete")) },
     async ({ relationIds }) => {
       await db
         .delete(relationsTable)
@@ -171,27 +206,20 @@ export const provider = (mcp: McpServer) => {
     "Search your memories with a semantic query",
     {
       query: z.string().describe("Semantic search query"),
+      k: z.number().optional().default(10).describe("Number of results to return"),
     },
-    async ({ query }) => {
-      const likeQuery = `%${query}%`;
-      const entities = await db
-        .select()
-        .from(entitiesTable)
-        .where(ilike(entitiesTable.name, likeQuery));
+    async ({ query, k }) => {
+      // Generate embedding for the query
+      const queryEmbedding = await createEmbedding(openai, query);
 
-      // Maybe search observations content too?
-      const observations = await db
-        .select()
-        .from(observationsTable)
-        .leftJoin(entitiesTable, eq(observationsTable.entityId, entitiesTable.id))
-        .where(ilike(observationsTable.content, likeQuery));
-
-      // You might want to structure the result differently, e.g., group observations by entity
-
+      // Perform vector search for similar observations
+      const similarObservations = await findSimilarObservations(queryEmbedding, k);
+      
       return {
         content: [{
           type: "text",
-          text: JSON.stringify({ entities, observations })
+          // Return the observations found by vector search
+          text: JSON.stringify({ observations: similarObservations })
         }]
       }
     },
@@ -201,7 +229,7 @@ export const provider = (mcp: McpServer) => {
     "memory_open_nodes",
     "Open nodes in your memories",
     {
-      entityNames: z.array(entitySelectSchema.shape.name),
+      entityNames: z.array(entitySelectSchema.shape.name.describe("Name of the entity to open")),
     },
     async ({ entityNames }) => {
       const relationsFromAlias = alias(relationsTable, 'relationsFrom');

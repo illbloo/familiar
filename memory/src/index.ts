@@ -5,6 +5,7 @@ import mcp from './mcp/server';
 import chats from './routes/chats';
 import posts from './routes/posts';
 import users from './routes/users';
+import jobs from './routes/jobs';
 
 type HonoEnv = {};
 
@@ -14,7 +15,7 @@ const routes = app
   .route("/chats", chats)
   .route("/posts", posts)
   .route("/users", users)
-;
+  .route("/jobs", jobs);
 
 app.onError((err, c) => {
   if (err instanceof HTTPException) {
