@@ -2,7 +2,7 @@ services:
   familiar:
     container_name: familiar-node
     build:
-      context: .
+      context: ./memory
       dockerfile: Dockerfile
     ports:
       - "${FAMILIAR_PORT:-3000}:3000"
@@ -11,6 +11,9 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      redis:
+        condition: service_started
+
   postgres:
     container_name: familiar-postgres
     image: pgvector/pgvector:pg17
@@ -31,6 +34,17 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  redis:
+    container_name: familiar-redis
+    image: bitnami/redis:latest
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    volumes:
+      - redis:/data
+
 volumes:
   postgres:
+    driver: local
+  redis:
     driver: local

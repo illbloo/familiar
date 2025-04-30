@@ -5,7 +5,7 @@
     },
     "notebook": {
       "command": "bun",
-      "args": ["/Users/me/code/dotfiles/.familiar/tools/notebook/notebook.js"]
+      "args": ["/Users/me/Library/Application Support/aichat/functions/notebook/notebook.js"]
     }
   },
   "mcpServersDisabled": {
@@ -15,7 +15,7 @@
     },
     "uithub": {
       "command": "bun",
-      "args": ["/Users/me/code/dotfiles/.familiar/tools/uithub/uithub.js"]
+      "args": ["/Users/me/Library/Application Support/aichat/functions/tools/uithub/uithub.js"]
     },
     "ical": {
       "command": "uv",

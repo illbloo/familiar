@@ -1,25 +1,34 @@
 {
   "name": "llm-familiar",
   "version": "1.0.0",
-  "devDependencies": {
-    "@types/bun": "^1.2.11"
-  },
-  "description": "",
+  "type": "module",
   "private": true,
   "scripts": {
+    "build": "argc build",
+    "docker:start": "docker compose up -d",
+    "mcp:start": "argc mcp start",
+    "start": "bun run docker:start && bun run mcp:start",
+    "client": "bun client/src/index.ts",
     "migrate-session": "bun scripts/session-migrator/index.ts",
-    "sampler": "bun sampler/src/cli.ts"
+    "notebook": "bun notebook/src/index.ts",
+    "sampler": "bun sampler/src/cli.ts",
+    "uithub": "bun tools/uithub/src/index.ts"
   },
-  "type": "module",
   "workspaces": [
     "client",
     "memory",
-    "mcp/server",
     "mcp/bridge",
+    "mcp/server",
     "midi",
     "notebook",
-    "scripts/session-migrator/*",
     "sampler",
+    "scripts/session-migrator/*",
     "tools/uithub"
-  ]
+  ],
+  "devDependencies": {
+    "@types/bun": "^1.2.11"
+  },
+  "dependencies": {
+    "mcp-bridge": "/Users/me/Library/Application Support/aichat/functions/mcp/bridge"
+  }
 }
