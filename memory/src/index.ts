@@ -4,6 +4,7 @@ import { HTTPException } from 'hono/http-exception';
 import mcp from './mcp/server';
 import chats from './routes/chats';
 import posts from './routes/posts';
+import users from './routes/users';
 
 type HonoEnv = {};
 
@@ -12,6 +13,7 @@ const routes = app
   .route("/mcp", mcp)
   .route("/chats", chats)
   .route("/posts", posts)
+  .route("/users", users)
 ;
 
 app.onError((err, c) => {
