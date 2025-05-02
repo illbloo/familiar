@@ -1,4 +1,4 @@
-import { streamOpenAIToMidi, type LlmMidiStreamOptions } from '../llm-midi-stream';
+import { streamOpenAIToMidi, type LlmMidiStreamOptions } from './llm-midi-stream';
 import OpenAI from 'openai';
 
 // Global variables

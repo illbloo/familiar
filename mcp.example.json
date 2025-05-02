@@ -8,7 +8,7 @@
       "args": [
         "--cwd=/Users/me/Library/Application Support/aichat/functions",
         "run",
-        "notebook"
+        "tool:notebook"
       ]
     },
     "search": {
@@ -21,13 +21,13 @@
     }
   },
   "mcpServersDisabled": {
-    "familor": {
-      "command": "pnpx",
-      "args": ["supergateway", "--sse", "http://127.0.0.1:3000/sse"]
-    },
-    "uithub": {
+    "github": {
       "command": "bun",
-      "args": ["/Users/me/Library/Application Support/aichat/functions/tools/uithub/uithub.js"]
+      "args": [
+        "--cwd=/Users/me/Library/Application Support/aichat/functions",
+        "run",
+        "tool:github"
+      ]
     },
     "ical": {
       "command": "uv",
