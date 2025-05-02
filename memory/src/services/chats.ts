@@ -30,6 +30,10 @@ export interface ChatAddMessagesParams {
 }
 
 export const insertMessages = async ({ messages, chatId }: ChatAddMessagesParams) => {
+  if (!messages.length) {
+    return [];
+  }
+
   const messageIds: string[] = await db
     .insert(messagesTable)
     .values(messages.map((m) => ({

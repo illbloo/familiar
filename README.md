@@ -1,21 +1,25 @@
-# llm-familiar
-This repo contains some of my personal LLM tooling. It started as a fork of [llm-functions](https://github.com/sigoden/llm-functions) and is starting to become something between dotfiles and TS monorepo.
+# familiar ^_^
+my personal llm tooling!
 
-Not much to see here. This is mostly a scratchpad + public archive because I need more public things on my github lol.
+this began as a curious fork of [llm-functions](https://github.com/sigoden/llm-functions) but started morphing into a TypeScript monorepo. this is home to memory, tools, and prompts - see [aichat](https://github.com/illbloo/aichat) for the Rust client, agent runner, etc~
 
 ### dependencies
-* [aichat](https://github.com/illbloo/aichat) - llm cli client (fork)
 * [jq](https://github.com/jqlang/jq/tree/master) + [yq](https://github.com/kislyuk/yq) - JSON/YAML processing
 * [Bun](https://bun.sh/) - JS runtime / package manager
 * [argc](https://github.com/sigoden/argc) - Bash CLI framework
 * [dotfiles](https://github.com/illbloo/dotfiles) - optional(?)
 
 ## todo
-- [ ] chore: finish monorepo-ifying and general cleanup
-- [ ] feat(aichat): improve agent loop
-- [ ] feat(aichat): read/write chat sessions to postgres
-- [ ] feat(aichat): dynamic prompting
-- [ ] feat(llmf): store sysprompt templates, more dynamic prompting
-- [ ] feat(llmf): scheduled message indexing
-- [ ] feat(llmf): scheduled prompts to cache shit / email me (see memory/src/ai/)
-- [ ] consider: making things work on Cloudflare Workers while still being self-hostable
+- [ ] chore: finish monorepo-ifying
+- [ ] chore: remove unused bash scripts
+- [ ] chore: bring things closer together
+- [ ] aichat: improve agent loop
+- [x] aichat: read/write chat sessions to postgres
+- [ ] aichat: parallel tool calls
+- [ ] llmf: store system prompts + agent data
+- [ ] llmf: more dynamic prompting
+- [ ] llmf: add actual message queue
+- [ ] llmf: scheduled prompts for reflecting, optimizing, spamming me, etc
+- [ ] later: web client
+- [ ] later: make familiars real
+- [ ] consider: make things work on Cloudflare Workers while still being self-hostable (ws room?)
