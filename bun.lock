@@ -118,8 +118,48 @@
         "typescript": "^5.5.2",
       },
     },
+    "tools/notification": {
+      "name": "familiar-notifications",
+      "version": "0.0.1",
+      "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.11.0",
+      },
+      "devDependencies": {
+        "typescript": "^5.8.3",
+      },
+    },
+    "tools/reminders": {
+      "name": "familiar-reminders",
+      "version": "0.0.1",
+      "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.11.0",
+      },
+      "devDependencies": {
+        "typescript": "^5.8.3",
+      },
+    },
+    "tools/screenshot": {
+      "name": "familiar-screenshot",
+      "version": "0.0.1",
+      "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.11.0",
+      },
+      "devDependencies": {
+        "typescript": "^5.8.3",
+      },
+    },
     "tools/search": {
       "name": "familiar-search",
+      "version": "0.0.1",
+      "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.11.0",
+      },
+      "devDependencies": {
+        "typescript": "^5.8.3",
+      },
+    },
+    "tools/speak": {
+      "name": "familiar-speak",
       "version": "0.0.1",
       "dependencies": {
         "@modelcontextprotocol/sdk": "^1.11.0",
@@ -407,7 +447,15 @@
 
     "familiar-notebook": ["familiar-notebook@workspace:notebook"],
 
+    "familiar-notifications": ["familiar-notifications@workspace:tools/notification"],
+
+    "familiar-reminders": ["familiar-reminders@workspace:tools/reminders"],
+
+    "familiar-screenshot": ["familiar-screenshot@workspace:tools/screenshot"],
+
     "familiar-search": ["familiar-search@workspace:tools/search"],
+
+    "familiar-speak": ["familiar-speak@workspace:tools/speak"],
 
     "familiar-uithub": ["familiar-uithub@workspace:tools/uithub"],
 
@@ -669,7 +717,15 @@
 
     "familiar-midi/@modelcontextprotocol/sdk": ["@modelcontextprotocol/sdk@1.11.0", "", { "dependencies": { "content-type": "^1.0.5", "cors": "^2.8.5", "cross-spawn": "^7.0.3", "eventsource": "^3.0.2", "express": "^5.0.1", "express-rate-limit": "^7.5.0", "pkce-challenge": "^5.0.0", "raw-body": "^3.0.0", "zod": "^3.23.8", "zod-to-json-schema": "^3.24.1" } }, "sha512-k/1pb70eD638anoi0e8wUGAlbMJXyvdV4p62Ko+EZ7eBe1xMx8Uhak1R5DgfoofsK5IBBnRwsYGTaLZl+6/+RQ=="],
 
+    "familiar-notifications/@modelcontextprotocol/sdk": ["@modelcontextprotocol/sdk@1.11.0", "", { "dependencies": { "content-type": "^1.0.5", "cors": "^2.8.5", "cross-spawn": "^7.0.3", "eventsource": "^3.0.2", "express": "^5.0.1", "express-rate-limit": "^7.5.0", "pkce-challenge": "^5.0.0", "raw-body": "^3.0.0", "zod": "^3.23.8", "zod-to-json-schema": "^3.24.1" } }, "sha512-k/1pb70eD638anoi0e8wUGAlbMJXyvdV4p62Ko+EZ7eBe1xMx8Uhak1R5DgfoofsK5IBBnRwsYGTaLZl+6/+RQ=="],
+
+    "familiar-reminders/@modelcontextprotocol/sdk": ["@modelcontextprotocol/sdk@1.11.0", "", { "dependencies": { "content-type": "^1.0.5", "cors": "^2.8.5", "cross-spawn": "^7.0.3", "eventsource": "^3.0.2", "express": "^5.0.1", "express-rate-limit": "^7.5.0", "pkce-challenge": "^5.0.0", "raw-body": "^3.0.0", "zod": "^3.23.8", "zod-to-json-schema": "^3.24.1" } }, "sha512-k/1pb70eD638anoi0e8wUGAlbMJXyvdV4p62Ko+EZ7eBe1xMx8Uhak1R5DgfoofsK5IBBnRwsYGTaLZl+6/+RQ=="],
+
+    "familiar-screenshot/@modelcontextprotocol/sdk": ["@modelcontextprotocol/sdk@1.11.0", "", { "dependencies": { "content-type": "^1.0.5", "cors": "^2.8.5", "cross-spawn": "^7.0.3", "eventsource": "^3.0.2", "express": "^5.0.1", "express-rate-limit": "^7.5.0", "pkce-challenge": "^5.0.0", "raw-body": "^3.0.0", "zod": "^3.23.8", "zod-to-json-schema": "^3.24.1" } }, "sha512-k/1pb70eD638anoi0e8wUGAlbMJXyvdV4p62Ko+EZ7eBe1xMx8Uhak1R5DgfoofsK5IBBnRwsYGTaLZl+6/+RQ=="],
+
     "familiar-search/@modelcontextprotocol/sdk": ["@modelcontextprotocol/sdk@1.11.0", "", { "dependencies": { "content-type": "^1.0.5", "cors": "^2.8.5", "cross-spawn": "^7.0.3", "eventsource": "^3.0.2", "express": "^5.0.1", "express-rate-limit": "^7.5.0", "pkce-challenge": "^5.0.0", "raw-body": "^3.0.0", "zod": "^3.23.8", "zod-to-json-schema": "^3.24.1" } }, "sha512-k/1pb70eD638anoi0e8wUGAlbMJXyvdV4p62Ko+EZ7eBe1xMx8Uhak1R5DgfoofsK5IBBnRwsYGTaLZl+6/+RQ=="],
+
+    "familiar-speak/@modelcontextprotocol/sdk": ["@modelcontextprotocol/sdk@1.11.0", "", { "dependencies": { "content-type": "^1.0.5", "cors": "^2.8.5", "cross-spawn": "^7.0.3", "eventsource": "^3.0.2", "express": "^5.0.1", "express-rate-limit": "^7.5.0", "pkce-challenge": "^5.0.0", "raw-body": "^3.0.0", "zod": "^3.23.8", "zod-to-json-schema": "^3.24.1" } }, "sha512-k/1pb70eD638anoi0e8wUGAlbMJXyvdV4p62Ko+EZ7eBe1xMx8Uhak1R5DgfoofsK5IBBnRwsYGTaLZl+6/+RQ=="],
 
     "form-data/mime-types": ["mime-types@2.1.35", "", { "dependencies": { "mime-db": "1.52.0" } }, "sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw=="],
 

@@ -2,9 +2,5 @@ get_current_time.sh
 fetch_url_via_curl.sh
 execute_js_code.js
 execute_command.sh
-reminder_add.sh
-send_notification.sh
-text_to_speech.sh
-screenshot.sh
 prompt_llm.sh
 prompt_agent.sh

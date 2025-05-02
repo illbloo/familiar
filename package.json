@@ -11,7 +11,11 @@
     "mcp:start": "argc mcp start",
     "start": "bun run docker:start && bun run mcp:start",
     "check": "argc check",
+    "tool:reminders": "bun tools/reminders/main.ts",
+    "tool:notification": "bun tools/notification/main.ts",
+    "tool:screenshot": "bun tools/screenshot/main.ts",
     "tool:search": "bun tools/search/src/main.ts",
+    "tool:speak": "bun tools/speak/main.ts",
     "client": "bun client/src/index.ts",
     "migrate-session": "bun scripts/session-migrator/index.ts",
     "notebook": "bun notebook/main.ts",
@@ -28,7 +32,11 @@
     "notebook",
     "sampler",
     "scripts/session-migrator/*",
-    "tools/uithub",
-    "tools/search"
+    "tools/notification",
+    "tools/screenshot",
+    "tools/search",
+    "tools/reminders",
+    "tools/speak",
+    "tools/uithub"
   ]
 }
