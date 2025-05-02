@@ -2,7 +2,7 @@ import { type MidiMessage, sendMidiMessage } from "./send";
 import { listenForMidiMessages, stopListening } from "./listen";
 import { requestMidiAccess, getMidiInputs, getMidiOutputs } from "./io";
 
-type MidiAction = "requestAccess" | "getMidiInputs" | "getMidiOutputs" | "sendMidiMessage" | "listenForMidiMessages" | "stopListening";
+type MidiAction = "requestAccess" | "getMidiInputs" | "getMidiOutputs" | "sendMidiMessage" | "listenForMidiMessages" | "stopListening" | "streamOpenAIToMidi";
 type MidiParams = (MidiMessage | WebMidi.MIDIOptions & { deviceId?: string }) & {
   action: MidiAction
 }

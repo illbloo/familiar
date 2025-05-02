@@ -5,7 +5,16 @@
   "peerDependencies": {
     "typescript": ">=5"
   },
+  "scripts": {
+    "build": "tsc && vite build",
+    "dev": "vite"
+  },
   "devDependencies": {
     "@types/webmidi": "^2.1.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.11.0",
+    "openai": "^4.96.2",
+    "vite": "^6.3.4"
   }
 }

@@ -1,5 +1,15 @@
 {
   "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "esnext"
+    ],
+    "types": [
+      "vite/client",
+      "@types/webmidi"
+    ]
+  },
   "include": [
     "src/**/*.ts",
   ]
