@@ -5,6 +5,8 @@ import { relations, sql } from "drizzle-orm";
 
 export const chatsTable = pgTable("chats", {
   id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  // aichat yaml session name, if applicable
+  sessionId: text("session_id"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
