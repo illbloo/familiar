@@ -1,11 +1,3 @@
-search_wikipedia.sh
-search_arxiv.sh
-fs_cat.sh
-fs_ls.sh
-fs_mkdir.sh
-fs_patch.sh
-fs_rm.sh
-fs_write.sh
 get_current_time.sh
 fetch_url_via_curl.sh
 execute_js_code.js

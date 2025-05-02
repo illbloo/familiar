@@ -1,7 +1,9 @@
 {
   "name": "llm-familiar",
   "version": "1.0.0",
-  "type": "module",
+  "devDependencies": {
+    "@types/bun": "^1.2.11"
+  },
   "private": true,
   "scripts": {
     "build": "argc build",
@@ -9,12 +11,14 @@
     "mcp:start": "argc mcp start",
     "start": "bun run docker:start && bun run mcp:start",
     "check": "argc check",
+    "tool:search": "bun tools/search/src/main.ts",
     "client": "bun client/src/index.ts",
     "migrate-session": "bun scripts/session-migrator/index.ts",
     "notebook": "bun notebook/main.ts",
     "sampler": "bun sampler/src/cli.ts",
     "uithub": "bun tools/uithub/src/index.ts"
   },
+  "type": "module",
   "workspaces": [
     "client",
     "memory",
@@ -24,9 +28,7 @@
     "notebook",
     "sampler",
     "scripts/session-migrator/*",
-    "tools/uithub"
-  ],
-  "devDependencies": {
-    "@types/bun": "^1.2.11"
-  }
+    "tools/uithub",
+    "tools/search"
+  ]
 }

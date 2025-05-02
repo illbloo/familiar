@@ -118,6 +118,16 @@
         "typescript": "^5.5.2",
       },
     },
+    "tools/search": {
+      "name": "familiar-search",
+      "version": "0.0.1",
+      "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.11.0",
+      },
+      "devDependencies": {
+        "typescript": "^5.8.3",
+      },
+    },
     "tools/uithub": {
       "name": "familiar-uithub",
       "dependencies": {
@@ -397,6 +407,8 @@
 
     "familiar-notebook": ["familiar-notebook@workspace:notebook"],
 
+    "familiar-search": ["familiar-search@workspace:tools/search"],
+
     "familiar-uithub": ["familiar-uithub@workspace:tools/uithub"],
 
     "fdir": ["fdir@6.4.4", "", { "peerDependencies": { "picomatch": "^3 || ^4" }, "optionalPeers": ["picomatch"] }, "sha512-1NZP+GK4GfuAv3PqKvxQRDMjdSRZjnkq7KfhlNrCNNlZ0ygQFpebfrnfnq/W7fpUnAv9aGWmY1zKx7FYL3gwhg=="],
@@ -656,6 +668,8 @@
     "cross-spawn/which": ["which@2.0.2", "", { "dependencies": { "isexe": "^2.0.0" }, "bin": { "node-which": "./bin/node-which" } }, "sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA=="],
 
     "familiar-midi/@modelcontextprotocol/sdk": ["@modelcontextprotocol/sdk@1.11.0", "", { "dependencies": { "content-type": "^1.0.5", "cors": "^2.8.5", "cross-spawn": "^7.0.3", "eventsource": "^3.0.2", "express": "^5.0.1", "express-rate-limit": "^7.5.0", "pkce-challenge": "^5.0.0", "raw-body": "^3.0.0", "zod": "^3.23.8", "zod-to-json-schema": "^3.24.1" } }, "sha512-k/1pb70eD638anoi0e8wUGAlbMJXyvdV4p62Ko+EZ7eBe1xMx8Uhak1R5DgfoofsK5IBBnRwsYGTaLZl+6/+RQ=="],
+
+    "familiar-search/@modelcontextprotocol/sdk": ["@modelcontextprotocol/sdk@1.11.0", "", { "dependencies": { "content-type": "^1.0.5", "cors": "^2.8.5", "cross-spawn": "^7.0.3", "eventsource": "^3.0.2", "express": "^5.0.1", "express-rate-limit": "^7.5.0", "pkce-challenge": "^5.0.0", "raw-body": "^3.0.0", "zod": "^3.23.8", "zod-to-json-schema": "^3.24.1" } }, "sha512-k/1pb70eD638anoi0e8wUGAlbMJXyvdV4p62Ko+EZ7eBe1xMx8Uhak1R5DgfoofsK5IBBnRwsYGTaLZl+6/+RQ=="],
 
     "form-data/mime-types": ["mime-types@2.1.35", "", { "dependencies": { "mime-db": "1.52.0" } }, "sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw=="],
 

@@ -5,7 +5,19 @@
     },
     "notebook": {
       "command": "bun",
-      "args": ["/Users/me/Library/Application Support/aichat/functions/notebook/notebook.js"]
+      "args": [
+        "--cwd=/Users/me/Library/Application Support/aichat/functions",
+        "run",
+        "notebook"
+      ]
+    },
+    "search": {
+      "command": "bun",
+      "args": [
+        "--cwd=/Users/me/Library/Application Support/aichat/functions",
+        "run",
+        "tool:search"
+      ]
     }
   },
   "mcpServersDisabled": {
