@@ -2,10 +2,11 @@ services:
   familiar:
     container_name: familiar-node
     build:
-      context: ./memory
+      context: .
+      target: memory
       dockerfile: Dockerfile
     ports:
-      - "${FAMILIAR_PORT:-3000}:3000"
+      - "${FAMILIAR_PORT:-3000}:80"
     env_file:
       - .env
     depends_on:
