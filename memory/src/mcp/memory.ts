@@ -14,7 +14,7 @@ import {
 import db from "../db";
 import { inArray, eq } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
-import { findSimilarObservations, insertObservation, listEntities } from "../memory/memory";
+import { findSimilarObservations, insertObservation, listEntities } from "../services/memory";
 import openai from "../ai/providers/openai";
 import { createEmbedding } from "../ai/providers/openai";
 

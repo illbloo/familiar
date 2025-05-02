@@ -7,9 +7,7 @@ import posts from './routes/posts';
 import users from './routes/users';
 import jobs from './routes/jobs';
 
-type HonoEnv = {};
-
-const app = new Hono<HonoEnv>()
+const app = new Hono()
 const routes = app
   .route("/mcp", mcp)
   .route("/chats", chats)

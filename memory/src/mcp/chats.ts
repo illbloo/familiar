@@ -1,25 +1,9 @@
+import { eq } from "drizzle-orm";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { searchMessages } from "../ai/message-search";
-import { chatsTable, Chat, chatSelectSchema, Message, messagesTable } from "../db/schema/chats";
 import db from "../db";
-import { eq } from "drizzle-orm";
-
-export interface ChatAddMessagesParams {
-  chatId: string;
-  messages: {
-    content: string;
-    role: string;
-  }[];
-}
-
-const chatAddMessagesSchema = z.object({
-  chatId: chatSelectSchema.shape.id,
-  messages: z.array(z.object({
-    content: z.string(),
-    role: z.string(),
-  })),
-});
+import { chatsTable, Chat, chatSelectSchema, Message, messagesTable } from "../db/schema/chats";
+import { insertMessages, getChatById, searchMessages } from "../services/chats";
 
 export const provider = (mcp: McpServer) => {
   mcp.tool(
@@ -66,11 +50,7 @@ export const provider = (mcp: McpServer) => {
       id: chatSelectSchema.shape.id,
     },
     async ({ id }) => {
-      const chat: Chat | undefined = await db
-        .select()
-        .from(chatsTable)
-        .where(eq(chatsTable.id, id))
-        .then(([chat]) => chat);
+      const chat = await getChatById(id);
 
       return {
         content: [
@@ -147,11 +127,18 @@ export const provider = (mcp: McpServer) => {
   mcp.tool(
     "chat_add_messages",
     "Add messages to a Chat's history",
-    chatAddMessagesSchema.shape,
+    {
+      chatId: chatSelectSchema.shape.id,
+      messages: z.object({
+        content: z.string().describe("Message content"),
+        role: z.string().describe("Message sender ('user', 'assistant')"),
+      }).array(),
+    },
     async ({ chatId, messages }) => {
-      await db
-        .insert(messagesTable)
-        .values(messages.map((m) => ({ ...m, chatId })));
+      await insertMessages({
+        chatId,
+        messages,
+      });
 
       return {
         content: [
