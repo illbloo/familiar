@@ -30,16 +30,22 @@ export interface ChatAddMessagesParams {
 }
 
 export const insertMessages = async ({ messages, chatId }: ChatAddMessagesParams) => {
-  const messageIds = await db
+  const messageIds: string[] = await db
     .insert(messagesTable)
     .values(messages.map((m) => ({
       ...m,
       chatId,
-    })));
+    })))
+    .returning({ id: messagesTable.id })
+    .then((rows) => rows.map((r) => r.id));
 
   // todo: proper event dispatcher
+  console.debug(`dispatching message embeddings job for ${chatId}`);
   const res = await fetch(`http://localhost:3000/jobs/message_embeddings`, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify({
       messageIds,
     }),
