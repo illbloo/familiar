@@ -18,7 +18,7 @@
     "mcp-llm-functions": "index.js"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.1.0",
-    "uuid": "^11.0.3"
+    "@modelcontextprotocol/sdk": "^1.11.0",
+    "uuid": "^11.1.0"
   }
 }

@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "type": "module",
   "peerDependencies": {
-    "typescript": ">=5"
+    "typescript": "^5.8.3"
   },
   "scripts": {
     "build": "tsc && vite build",
@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.11.0",
-    "openai": "^4.96.2",
+    "openai": "^4.97.0",
     "vite": "^6.3.4"
   }
 }

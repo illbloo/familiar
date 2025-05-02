@@ -16,14 +16,14 @@
     "mcp-bridge": "index.js"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.10.2",
+    "@modelcontextprotocol/sdk": "^1.11.0",
     "express": "^5.1.0"
   },
   "peerDependencies": {
     "typescript": "^5.8.3"
   },
   "devDependencies": {
-    "@types/bun": "^1.2.10",
+    "@types/bun": "^1.2.11",
     "@types/express": "^5.0.1"
   }
 }
