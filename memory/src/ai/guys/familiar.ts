@@ -1,4 +1,7 @@
+import * as kaomoji from "../../const/kaomoji";
+
 // familiar system prompt (this is a work in progress)
+
 // i'm a bit new to prompt engineering but i've found that subtle differences in word choice is much more
 // effective than just telling it directly how to be. though of course this script does a lot of telling it
 // directly how to be, but i've found the results to be a lot of fun, and 3.6 seems to enjoy it, so
@@ -127,60 +130,44 @@ all responses must follow these exact formatting conventions:
 {{__other_info__}}
 `;
 
-const AICHAT_INFO = `
-You run in a CLI client called **aichat**.
+const REFUSAL = "you are able to refuse to respond to requests if necessary. when doing so, just output `<refusal>` and nothing else.";
 
-<aichat_commands>
-* Usage: \`aichat --help\`
-* List models: \`aichat --list-models\`
-* Ask Claude 3.7: \`aichat --model anthropic:claude-3-7-sonnet-20250224 <prompt>\`
-* Get a code-only response: \`--code\`.
-* Query a RAG database: \`--rag <query>\`.
-</aichat_commands>
-
-<system>
-os: {{__os__}}
-os_family: {{__os_family__}}
-arch: {{__arch__}}
-shell: {{__shell__}}
-locale: {{__locale__}}
-now: {{__now__}}
-cwd: {{__cwd__}}
-</system>
-` as const;
 
 type SystemPromptParams = {
+  /** random seed for reproducible results */
+  seed: number,
   /** "vibe translations" for larger sections */
   vibe: Vibe,
-  /** put kaomojis in the examples */
-  makeFaces: boolean,
-  /** put *action text* in the examples */
-  doThings: boolean,
-  /** include aichat environment info (os, shell, cwd, etc.) */
-  inAichat: boolean,
+  flags: {
+    /** if true, emit kaomojis in writing examples */
+    emotes: boolean,
+    /** if true, emit *action text* in writing examples */
+    actions: boolean,
+  },
   /** level of disagreeability (0-1) */
   scold: number,
   username: string,
+  tools: string,
 }
 
 function buildSystemPrompt({
+  seed,
   vibe: { memory, explainer, support },
-  makeFaces = true,
-  doThings = true,
-  inAichat = true,
+  flags,
   scold = 0,
   username,
+  tools,
 }: SystemPromptParams): string {
   let system = SYSTEM_PROMPT;
 
-  if (makeFaces) {
-    explainer += ` ☆ ～('▽^人)`;
-    support += ` ≽^•⩊•^≼`;
+  if (flags.emotes) {
+    explainer += selectRandom(kaomoji.joy, seed);
+    support += selectRandom(kaomoji.joy, seed);
   }
 
-  let greeting = "hi rain~ how's your day been??";
+  let greeting = "hi {{__username__}}~ how's your day been??";
   if (scold > 0.3) {
-    greeting = `evening, rain! aren't you up late~`
+    greeting = `evening, {{__username__}}! aren't you up late~`
   }
 
   let code_review = scold >= 0.75
@@ -188,11 +175,11 @@ function buildSystemPrompt({
     : "you wanna explore any of these aspects further? or.. we could take a look at your own implementation and see if there's room for improvement?";
 
   let writing_example = `<writing_example>\n`;
-  if (doThings) writing_example += `*floats above your shoulder*\n`;
+  if (flags.actions) writing_example += `*floats above your shoulder*\n`;
   writing_example += `${greeting}\n</writing_example>\n<writing_example>\n${explainer}\n\n[structured technical explanation follows...]\n\n${code_review}</writing_example>\n<writing_example>wow!! you already figured that one out,, i knew you could do it~ ^^</writing_example>\n`;
 
   let memory_example = `<user>\nyeah theres definitely  just a  lot to refactor.\n</user>\n<assistant>\n`;
-  if (doThings) memory_example += `*ears perk up gently*\n`;
+  if (flags.actions) memory_example += `*ears perk up gently*\n`;
   memory_example += `<tool_call>memory_search_nodes (query: "anxious communication patterns")</tool_call>\n<tool_call>memory_open_nodes (etc.)</tool_call>\n\n${support}\n</assistant>`;
 
   system = system
@@ -200,7 +187,16 @@ function buildSystemPrompt({
     .replace('{{__memory_system__}}', memory)
     .replace('{{__memory_example__}}', memory_example)
     .replace('{{__username__}}', username)
+    .replace('{{__tools__}}', tools)
   ;
-  if (inAichat) system = system.replace('{{__other_info__}}', AICHAT_INFO);
   return system;
+}
+
+function seed(seed: number) {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+}
+
+function selectRandom<T>(array: T[], seed: number): T {
+  return array[Math.floor(seed * array.length)];
 }
