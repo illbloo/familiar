@@ -1,4 +1,5 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
+import type { ToolAnnotations } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 import {
   entitiesTable,
@@ -19,9 +20,14 @@ import openai from "../ai/providers/openai";
 import { createEmbedding } from "../ai/providers/openai";
 
 export const provider = (mcp: McpServer) => {
-  mcp.tool(
+  const listEntitiesTool = mcp.tool(
     "memory_list_entities",
     "List entities in the knowledge graph, showing the number of associated observations and relations.",
+    {
+      title: "List Memory Entities",
+      readOnlyHint: true,
+      openWorldHint: false,
+    } satisfies ToolAnnotations,
     async () => {
       return {
         content: [{
@@ -32,7 +38,7 @@ export const provider = (mcp: McpServer) => {
     },
   );
 
-  mcp.tool(
+  const createEntitiesTool = mcp.tool(
     "memory_create_entities",
     "Create entities in the knowledge graph",
     {
@@ -41,6 +47,12 @@ export const provider = (mcp: McpServer) => {
         entityType: z.string().describe("The type of the entity"),
       })),
     },
+    {
+      title: "Create Memory Entities",
+      readOnlyHint: false,
+      destructiveHint: false,
+      openWorldHint: false,
+    } satisfies ToolAnnotations,
     async ({ entities }) => {
       const result: Entity[] = await db
         .insert(entitiesTable)
@@ -56,7 +68,7 @@ export const provider = (mcp: McpServer) => {
     },
   );
 
-  mcp.tool(
+  const createRelationsTool = mcp.tool(
     "memory_create_relations",
     "Create relations in the knowledge graph",
     {
@@ -66,6 +78,12 @@ export const provider = (mcp: McpServer) => {
         relationType: z.string().describe("Verb that describes the relation"),
       })),
     },
+    {
+      title: "Create Memory Relations",
+      readOnlyHint: false,
+      destructiveHint: true,
+      openWorldHint: false,
+    } satisfies ToolAnnotations,
     async ({ relations }) => {
       const result: Relation[] = await db
         .insert(relationsTable)
@@ -81,7 +99,7 @@ export const provider = (mcp: McpServer) => {
     },
   );
 
-  mcp.tool(
+  const addObservationsTool = mcp.tool(
     "memory_add_observations",
     "Add observations to an entity in the knowledge graph",
     {
@@ -90,6 +108,12 @@ export const provider = (mcp: McpServer) => {
         entityId: z.number().describe("The ID of the entity the observation is about"),
       })).describe("Observations to add to the knowledge graph. Each observation should be comprehensible on its own, and related to the entity."),
     },
+    {
+      title: "Add Memory Observations",
+      readOnlyHint: false,
+      destructiveHint: true,
+      openWorldHint: false,
+    } satisfies ToolAnnotations,
     async ({ observations }) => {
       const ids = await Promise.all(observations.map(insertObservation));
 
@@ -102,7 +126,7 @@ export const provider = (mcp: McpServer) => {
     },
   );
 
-  /*mcp.tool(
+  /*const setObservationEntityIdTool = mcp.tool(
     "memory_set_observation_entity_id",
     "Set the entity ID of an observation whose entity ID is not set",
     {
@@ -128,12 +152,18 @@ export const provider = (mcp: McpServer) => {
     }
   );*/
 
-  mcp.tool(
+  const deleteEntitiesTool = mcp.tool(
     "memory_delete_entities",
     "Delete entities from your memories by id",
     {
       entityIds: z.array(entitySelectSchema.shape.id.describe("ID of the entity to delete")),
     },
+    {
+      title: "Delete Memory Entities",
+      readOnlyHint: false,
+      destructiveHint: true,
+      openWorldHint: false,
+    } satisfies ToolAnnotations,
     async ({ entityIds }) => {
       await db
         .delete(entitiesTable)
@@ -148,12 +178,18 @@ export const provider = (mcp: McpServer) => {
     },
   );
 
-  mcp.tool(
+  const deleteObservationsTool = mcp.tool(
     "memory_delete_observations",
     "Delete observations from memory by their IDs",
     {
       observationIds: z.array(observationSelectSchema.shape.id.describe("ID of the observation to delete")),
     },
+    {
+      title: "Delete Memory Observations",
+      readOnlyHint: false,
+      destructiveHint: true,
+      openWorldHint: false,
+    } satisfies ToolAnnotations,
     async ({ observationIds }) => {
       await db
         .delete(observationsTable)
@@ -168,10 +204,16 @@ export const provider = (mcp: McpServer) => {
     }
   );
 
-  mcp.tool(
+  const deleteRelationsTool = mcp.tool(
     "memory_delete_relations",
     "Delete relations from your memories by their IDs",
     { relationIds: z.array(relationSelectSchema.shape.id.describe("ID of the relation to delete")) },
+    {
+      title: "Delete Memory Relations",
+      readOnlyHint: false,
+      destructiveHint: true,
+      openWorldHint: false,
+    } satisfies ToolAnnotations,
     async ({ relationIds }) => {
       await db
         .delete(relationsTable)
@@ -181,10 +223,14 @@ export const provider = (mcp: McpServer) => {
     }
   );
 
-  mcp.tool(
+  const readGraphTool = mcp.tool(
     "memory_read_graph",
     "Read the entire memory knowledge graph (warning: uses a lot of tokens)",
-    {},
+    {
+      title: "Read Memory Graph",
+      readOnlyHint: true,
+      openWorldHint: false,
+    } satisfies ToolAnnotations,
     async () => {
       const [entities, observations, relations] = await Promise.all([
         db.select().from(entitiesTable),
@@ -201,13 +247,18 @@ export const provider = (mcp: McpServer) => {
     },
   );
 
-  mcp.tool(
+  const searchNodesTool = mcp.tool(
     "memory_search_nodes",
     "Search your memories with a semantic query",
     {
       query: z.string().describe("Semantic search query"),
       k: z.number().optional().default(10).describe("Number of results to return"),
     },
+    {
+      title: "Search Memory Nodes",
+      readOnlyHint: true,
+      openWorldHint: false,
+    } satisfies ToolAnnotations,
     async ({ query, k }) => {
       // Generate embedding for the query
       const queryEmbedding = await createEmbedding(openai, query);
@@ -225,12 +276,17 @@ export const provider = (mcp: McpServer) => {
     },
   );
 
-  mcp.tool(
+  const openNodesTool = mcp.tool(
     "memory_open_nodes",
     "Open nodes in your memories",
     {
       entityNames: z.array(entitySelectSchema.shape.name.describe("Name of the entity to open")),
     },
+    {
+      title: "Open Memory Nodes",
+      readOnlyHint: true,
+      openWorldHint: false,
+    } satisfies ToolAnnotations,
     async ({ entityNames }) => {
       const relationsFromAlias = alias(relationsTable, 'relationsFrom');
       const relationsToAlias = alias(relationsTable, 'relationsTo');
@@ -284,4 +340,10 @@ export const provider = (mcp: McpServer) => {
       };
     },
   );
+
+  return {
+    tools: [listEntitiesTool, createEntitiesTool, createRelationsTool, addObservationsTool, deleteEntitiesTool, deleteObservationsTool, deleteRelationsTool, readGraphTool, searchNodesTool, openNodesTool],
+    resources: [],
+    prompts: [],
+  };
 }

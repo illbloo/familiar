@@ -2,13 +2,19 @@ import { eq } from "drizzle-orm";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import db from "../db";
-import { chatsTable, Chat, chatSelectSchema, Message, messagesTable } from "../db/schema/chats";
+import { chatsTable, Chat, chatSelectSchema, Message, messagesTable, chatSummariesTable } from "../db/schema/chats";
 import { insertMessages, getChatById, searchMessages } from "../services/chats";
 
 export const provider = (mcp: McpServer) => {
-  mcp.tool(
+  const chatCreateTool = mcp.tool(
     "chat_create",
     "Create a new Chat session",
+    {
+      title: "Create Chat",
+      readOnlyHint: false,
+      destructiveHint: false,
+      openWorldHint: false,
+    },
     async () => {
       const chat: Chat = await db
         .insert(chatsTable)
@@ -27,9 +33,14 @@ export const provider = (mcp: McpServer) => {
     },
   );
 
-  mcp.tool(
+  const chatListTool = mcp.tool(
     "chat_list",
     "List all Chat sessions",
+    {
+      title: "List Chat Sessions",
+      readOnlyHint: true,
+      openWorldHint: false,
+    },
     async () => {
       const chats: Chat[] = await db.select().from(chatsTable);
       return {
@@ -43,11 +54,14 @@ export const provider = (mcp: McpServer) => {
     }
   );
 
-  mcp.tool(
+  const chatGetTool = mcp.tool(
     "chat_get",
     "Get information about a Chat",
     {
       id: chatSelectSchema.shape.id,
+      title: "Get Chat Information",
+      readOnlyHint: true,
+      openWorldHint: false,
     },
     async ({ id }) => {
       const chat = await getChatById(id);
@@ -63,49 +77,16 @@ export const provider = (mcp: McpServer) => {
     },
   );
 
-  /*mcp.tool(
-    "update_chat",
-    "Update a chat by ID",
-    {
-      ...chatUpdateSchema.shape,
-      id: z.string(),
-    },
-    async (args) => {
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify(await updateChat(args)),
-          },
-        ],
-      };
-    },
-  );*/
-
-  mcp.tool(
-    "chat_delete",
-    "Delete a chat by ID",
-    {
-      id: chatSelectSchema.shape.id,
-    },
-    async ({ id }) => {
-      await db.delete(chatsTable).where(eq(chatsTable.id, id));
-      return {
-        content: [
-          {
-            type: 'text',
-            text: 'Chat deleted successfully',
-          },
-        ],
-      };
-    },
-  );
-
-  mcp.tool(
+  const chatListMessagesTool = mcp.tool(
     "chat_list_messages",
     "List messages from a chat",
     {
       id: chatSelectSchema.shape.id,
+    },
+    {
+      title: "List Chat Messages",
+      readOnlyHint: true,
+      openWorldHint: false,
     },
     async ({ id }) => {
       const messages: Message[] = await db
@@ -124,7 +105,7 @@ export const provider = (mcp: McpServer) => {
     },
   );
 
-  mcp.tool(
+  const chatAddMessagesTool = mcp.tool(
     "chat_add_messages",
     "Add messages to a Chat's history",
     {
@@ -133,6 +114,12 @@ export const provider = (mcp: McpServer) => {
         content: z.string().describe("Message content"),
         role: z.string().describe("Message sender ('user', 'assistant')"),
       }).array(),
+    },
+    {
+      title: "Add Messages to Chat",
+      readOnlyHint: false,
+      destructiveHint: true,
+      openWorldHint: false,
     },
     async ({ chatId, messages }) => {
       await insertMessages({
@@ -151,12 +138,17 @@ export const provider = (mcp: McpServer) => {
     },
   );
 
-  mcp.tool(
+  const chatSearchTool = mcp.tool(
     "chat_search",
     "Search Chat history",
     {
       query: z.string().describe("Natural language query"),
       limit: z.number().optional().default(10).describe("Number of results to return"),
+    },
+    {
+      title: "Search Chat History",
+      readOnlyHint: true,
+      openWorldHint: false,
     },
     async ({ query, limit }) => {
       return {
@@ -169,4 +161,10 @@ export const provider = (mcp: McpServer) => {
       };
     },
   );
+
+  return {
+    tools: [chatCreateTool, chatListTool, chatGetTool, chatListMessagesTool, chatAddMessagesTool, chatSearchTool],
+    resources: [],
+    prompts: [],
+  };
 }

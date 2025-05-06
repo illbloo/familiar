@@ -1,15 +1,21 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { getPostsSchema } from "../routes/posts";
 import z from "zod";
+import type { ToolAnnotations } from "@modelcontextprotocol/sdk/types.js";
 
 // calling these "tweets" so it treats them like tweets
 export const provider = (mcp: McpServer) => {
-  mcp.tool(
+  const listTweetsTool = mcp.tool(
     "tweets_list",
     "List recent Tweets by the user",
     getPostsSchema.extend({
       limit: z.number().min(1).max(20).optional(),
     }).shape,
+    {
+      title: "List Tweets",
+      readOnlyHint: true,
+      openWorldHint: false,
+    } satisfies ToolAnnotations,
     async ({ before, after, limit }) => {
       const url = new URL("http://localhost:3000/posts");
       if (before) url.searchParams.set("before", before.toISOString());
@@ -44,4 +50,10 @@ export const provider = (mcp: McpServer) => {
       };
     },
   );
+
+  return {
+    tools: [listTweetsTool],
+    resources: [],
+    prompts: [],
+  };
 }
