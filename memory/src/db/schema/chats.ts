@@ -50,8 +50,22 @@ export type MessageEmbedding = z.infer<typeof messageEmbeddingSelectSchema>;
 export type NewMessageEmbedding = z.infer<typeof messageEmbeddingInsertSchema>;
 export type UpdateMessageEmbedding = z.infer<typeof messageEmbeddingUpdateSchema>;
 
-export const chatsRelations = relations(chatsTable, ({ many }) => ({
+export const chatSummariesTable = pgTable("chat_summaries", {
+  id: uuid("id").primaryKey().references(() => chatsTable.id),
+  summary: text("summary").notNull(),
+});
+
+export const chatSummarySelectSchema = createSelectSchema(chatSummariesTable);
+export const chatSummaryInsertSchema = createInsertSchema(chatSummariesTable);
+export const chatSummaryUpdateSchema = createUpdateSchema(chatSummariesTable);
+
+export type ChatSummary = z.infer<typeof chatSummarySelectSchema>;
+export type NewChatSummary = z.infer<typeof chatSummaryInsertSchema>;
+export type UpdateChatSummary = z.infer<typeof chatSummaryUpdateSchema>;
+
+export const chatsRelations = relations(chatsTable, ({ one, many }) => ({
   messages: many(messagesTable),
+  summaries: one(chatSummariesTable, { fields: [chatsTable.id], references: [chatSummariesTable.id] }),
 }));
 
 export const messagesRelations = relations(messagesTable, ({ one }) => ({

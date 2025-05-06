@@ -2,8 +2,8 @@ import { eq } from "drizzle-orm";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import db from "../db";
-import { chatsTable, Chat, chatSelectSchema, Message, messagesTable, chatSummariesTable } from "../db/schema/chats";
-import { insertMessages, getChatById, searchMessages } from "../services/chats";
+import { chatsTable, Chat, chatSelectSchema, Message, messagesTable } from "../db/schema/chats";
+import { insertMessages, getChatById, searchMessages, setChatSummary } from "../services/chats";
 
 export const provider = (mcp: McpServer) => {
   const chatCreateTool = mcp.tool(
@@ -162,8 +162,33 @@ export const provider = (mcp: McpServer) => {
     },
   );
 
+  const chatSetSummaryTool = mcp.tool(
+    "chat_set_summary",
+    "Write a summary for a Chat.",
+    {
+      id: z.string().describe("Chat ID"),
+      summary: z.string().describe("Summarize the discussion briefly in 200 words or less to use as a prompt for future context."),
+    },
+    {
+      title: "Set Chat Summary",
+      readOnlyHint: false,
+      destructiveHint: true,
+      openWorldHint: false,
+    },
+    async ({ id, summary }) => {
+      const success = await setChatSummary(id, summary);
+      if (!success) {
+        return {
+          content: [{ type: "text", text: "Chat not found" }],
+          isError: true,
+        };
+      }
+      return { content: [{ type: "text", text: "Chat summary set" }] }
+    },
+  );
+
   return {
-    tools: [chatCreateTool, chatListTool, chatGetTool, chatListMessagesTool, chatAddMessagesTool, chatSearchTool],
+    tools: [chatCreateTool, chatListTool, chatGetTool, chatListMessagesTool, chatAddMessagesTool, chatSearchTool, chatSetSummaryTool],
     resources: [],
     prompts: [],
   };

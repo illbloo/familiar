@@ -1,4 +1,4 @@
-import { chatsTable, messagesTable, Chat, Message, messageEmbeddingsTable } from "../db/schema/chats";
+import { chatsTable, messagesTable, Chat, Message, messageEmbeddingsTable, chatSummariesTable } from "../db/schema/chats";
 import db from "../db";
 import { sql, eq, cosineDistance } from "drizzle-orm";
 import openai from "../ai/providers/openai";
@@ -11,11 +11,13 @@ export const getChatById = async (chatId: string): Promise<Chat | null> => {
       sessionId: chatsTable.sessionId,
       createdAt: chatsTable.createdAt,
       updatedAt: chatsTable.updatedAt,
+      summary: chatSummariesTable.summary,
       messageCount: sql<number>`COUNT(${messagesTable.id})`.mapWith(Number),
     })
     .from(chatsTable)
     .where(eq(chatsTable.id, chatId))
     .leftJoin(messagesTable, eq(chatsTable.id, messagesTable.chatId))
+    .leftJoin(chatSummariesTable, eq(chatsTable.id, chatSummariesTable.id))
     .groupBy(chatsTable.id);
 
   return chat ?? null;
@@ -94,4 +96,19 @@ export const searchMessages = async (
   `);*/
 
   return results;
+}
+
+/**
+ * Set a chat's summary. Returns false if no chat with the ID was found.
+ */
+export const setChatSummary = async (id: string, summary: string): Promise<boolean> => {
+  try {
+    await db.insert(chatSummariesTable).values({ id, summary });
+  } catch (err: any) {
+    if (err?.code === "23503") {
+      return false;
+    }
+    throw err;
+  }
+  return true;
 }

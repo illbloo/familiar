@@ -5,7 +5,7 @@ import db from "../db";
 import { chatsTable } from "../db/schema/chats";
 import { sql } from "drizzle-orm";
 import { reflect } from "../ai/chat-reflect";
-import { insertMessages, getChatById } from "../services/chats";
+import { insertMessages, getChatById, setChatSummary } from "../services/chats";
 
 export const app = new Hono()
   // Get info about a Chat by its ID
@@ -38,6 +38,22 @@ export const app = new Hono()
         .returning();
 
       return c.json(chat);
+    },
+  )
+  .put(
+    "/:chatId/summary",
+    zValidator("param", z.object({ chatId: z.string() })),
+    zValidator("json", z.object({
+      summary: z.string().describe("Summarize the discussion briefly in 200 words or less to use as a prompt for future context."),
+    })),
+    async (c) => {
+      const { chatId } = c.req.valid("param");
+      const { summary } = c.req.valid("json");
+
+      const success = await setChatSummary(chatId, summary);
+      if (!success) return c.json({ error: "Chat not found" }, 404);
+
+      return c.json({ ok: true });
     },
   )
   .put(
