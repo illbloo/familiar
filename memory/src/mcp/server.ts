@@ -5,6 +5,7 @@ import { toFetchResponse, toReqRes } from "fetch-to-node";
 import { provider as memoryProvider } from "./memory";
 import { provider as chatsProvider } from "./chats";
 import { provider as postsProvider } from "./posts";
+import { provider as notifyProvider } from "./notify";
 
 function createMcpServer(): McpServer {
   const server = new McpServer({
@@ -15,6 +16,7 @@ function createMcpServer(): McpServer {
   memoryProvider(server);
   chatsProvider(server);
   postsProvider(server);
+  notifyProvider(server);
 
   return server;
 }
